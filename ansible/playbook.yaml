@@ -1,0 +1,21 @@
+---
+- name: Prepare vm
+  hosts: vm-2
+  remote_user: ansible
+  become: true # повышать привилегии (sudo) для выполняемых задач
+  roles:
+    - prepare
+
+- name: App roles
+  hosts: vm-2
+  remote_user: ansible  
+  roles:
+    - role: backend
+    - role: frontend
+
+- name: Configure nginx
+  hosts: vm-2
+  remote_user: ansible
+  become: true # повышать привилегии (sudo) для выполняемых задач
+  roles:
+    - nginx-conf

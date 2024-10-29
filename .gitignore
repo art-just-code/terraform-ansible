@@ -1,0 +1,8 @@
+.terraform/
+.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/key.json
+.DS_Store
+.vscode
+.idea

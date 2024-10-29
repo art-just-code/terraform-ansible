@@ -1,0 +1,53 @@
+---
+# tasks for backend
+- name: add user jarservice
+  user:
+    name: "{{ backend_service_user }}"
+    create_home: no
+    shell: /sbin/nologin
+
+- name: Create a jarfile directory
+  ansible.builtin.file:
+    path: "{{ jarfile_directory }}"
+    owner: jarservice
+    group: ansible
+    state: directory
+
+- name: Create a report directory
+  ansible.builtin.file:
+    path: "{{ backend_report_directory }}"
+    state: directory
+    owner: jarservice
+    group: ansible
+    mode: '0644'
+
+- name: download maven_artifact from Nexus
+  maven_artifact:
+    group_id: com.yandex.practicum.devops
+    artifact_id: sausage-store
+    version: 1.0.1582761
+    repository_url: https://nexus.praktikum-services.tech/repository/std-033-68-backend
+    username: "std-033-68"
+    password: "{{ nexus_pwd }}"
+    dest: "{{ jarfile_directory }}/sausage-store.jar"
+
+- name: Change jarfile mode
+  ansible.builtin.file:
+    path: "{{ jarfile_directory }}/sausage-store.jar"
+    owner: jarservice
+    group: jarservice
+    mode: u+x
+
+- name: add config from template
+  template:
+    src: sausage-store-backend.service.j2
+    dest: /etc/systemd/system/sausage-store-backend.service
+
+- name: reload systemd units
+  systemd:
+    daemon_reload: yes
+
+- name: start
+  service:
+    name: sausage-store-backend
+    state: started 

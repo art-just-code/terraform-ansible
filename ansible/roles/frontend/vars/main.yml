@@ -1,0 +1,4 @@
+---
+# vars file for frontend
+frontend_version: 1.0.1582706
+frontend_directory: /var/www-data

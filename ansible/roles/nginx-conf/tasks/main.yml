@@ -1,0 +1,27 @@
+---
+# tasks file for nginx-conf
+- name: Create config nginx from template
+  template:
+    src: sausage-store.j2
+    dest: /etc/nginx/sites-available/sausage-store
+
+- name: Create a symbolic link
+  become: true
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/sausage-store
+    dest: /etc/nginx/sites-enabled/sausage-store
+    state: link
+  notify: reload nginx
+
+- name: Delete default nginx site
+  file: 
+    path: /etc/nginx/sites-enabled/default 
+    state: absent
+  notify: reload nginx
+
+- name: Enable and start nginx
+  become: true
+  systemd:
+    name: nginx
+    enabled: yes
+    state: started

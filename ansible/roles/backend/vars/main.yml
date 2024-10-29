@@ -1,0 +1,5 @@
+---
+# vars file for backend
+backend_service_user: jarservice
+backend_report_directory: /opt/sausage-store/reports/
+jarfile_directory: /opt/sausage-store/bin
